@@ -296,6 +296,15 @@ public:
             players.push_back(player);
         }
     }
+
+    // Destructor to free memory allocated to player pointers
+    ~Control()
+    {
+        for (auto p : players)
+        {
+			delete p;
+		}
+	}
 };
 
 int main()
