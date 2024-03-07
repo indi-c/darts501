@@ -29,7 +29,7 @@ namespace Darts {
         ::std::string getName();
 
         // Method to simulate a dart throw
-        void throwDart();
+        void simpleThrowDart();
 
         // Method to simulate a round of darts
         void playRound();
@@ -41,7 +41,19 @@ namespace Darts {
         void newGame();
 
         // average new accuracy into the total accuracy
-        void addAverage();
+        void addAverage(int games);
+
+        // throw at the bull
+        int throw_bull();
+
+        // throw for a treble
+        int throw_treble(int d);
+
+        // throw for a double
+        int throw_double(int d);
+
+        // throw for a single
+        int throw_single(int d);
     };
 
     // Class to manage the dart game logic and players
