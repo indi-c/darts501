@@ -187,29 +187,31 @@ public:
         std::cout << "Enter 1 or 2: ";
         int choice{ 0 };
         std::string choiceString;
-        std::getline(std::cin >> std::ws, choiceString);
-        try
+        // while loop to check if the input is a valid number
+        while (true)
         {
-            choice = std::stoi(choiceString);
+			std::getline(std::cin >> std::ws, choiceString);
+            try
+            {
+				choice = std::stoi(choiceString);
+                if (choice == 1)
+                {
+					mode = GameMode::SIMULATED_GAME;
+					break;
+				}
+                else if (choice == 2)
+                {
+					mode = GameMode::CUSTOM_GAME;
+					break;
+				}
+				std::cout << "\n [*] Invalid choice. Please try again.\n";
+			}
+            catch (std::invalid_argument)
+            {
+				std::cout << "\n [*] Invalid choice. Please try again.\n";
+			}
         }
-        catch (std::invalid_argument)
-        {
-            std::cout << "\n [*] Invalid choice. Please try again.\n";
-            getGameMode();
-        }
-        if (choice == 1)
-        {
-            mode = GameMode::SIMULATED_GAME;
-        }
-        else if (choice == 2)
-        {
-            mode = GameMode::CUSTOM_GAME;
-        }
-        else
-        {
-            std::cout << "Invalid choice. Please try again." << std::endl;
-            getGameMode();
-        }
+
     }
 
     // Plays a simulated game between Joe and Sid
@@ -226,44 +228,53 @@ public:
     // Gets the number of players from the user
     void getPlayerCount()
     {
-        std::cout << "How many players? ";
-        std::string playerCountString;
-        std::getline(std::cin >> std::ws, playerCountString);
-        try
+        // while loop to check if the input is a valid number
+        while (true)
         {
-            playerCount = std::stoi(playerCountString);
-        }
-        catch (std::invalid_argument)
-        {
-            std::cout << "\n [*] Invalid number of players. Please try again.\n";
-            getPlayerCount();
-        }
-        if (playerCount < 2)
-        {
-            std::cout << "\n [*] Invalid number of players. Please try again.\n";
-            getPlayerCount();
-        }
+            std::cout << "How many players? ";
+            std::string playerCountString;
+            std::getline(std::cin >> std::ws, playerCountString);
+
+            try
+            {
+				playerCount = std::stoi(playerCountString);
+                if (playerCount > 0)
+                {
+										break;
+				}
+                std::cout << "\n [*] Invalid number of players. Please try again.\n";
+			}
+            catch (std::invalid_argument)
+            {
+				std::cout << "\n [*] Invalid number of players. Please try again.\n";
+			}
+		}
     }
 
     // Gets the number of games to play from the user
     void getGamesToPlay()
     {
-        std::cout << "How many games? ";
-        std::string gamesToPlayString;
-        std::getline(std::cin >> std::ws, gamesToPlayString);
-        try
+        // while loop to check if the input is a valid number
+        while (true)
         {
-            gamesToPlay = std::stoi(gamesToPlayString);
-        }
-        catch (std::invalid_argument)
-        {
-            std::cout << "\n [*] Invalid number of games. Please try again.\n";
-            getGamesToPlay();
-        }
-        if (gamesToPlay < 1)
-        {
-            std::cout << "\n [*] Invalid number of games. Please try again.\n";
-            getGamesToPlay();
+            std::cout << "How many games? ";
+            std::string gamesToPlayString;
+            std::getline(std::cin >> std::ws, gamesToPlayString);
+
+            try
+			{
+				gamesToPlay = std::stoi(gamesToPlayString);
+                if (gamesToPlay > 0)
+                {
+					break;
+				}
+				std::cout << "\n [*] Invalid number of games. Please try again.\n";
+			}
+			catch (std::invalid_argument)
+			{
+				std::cout << "\n [*] Invalid number of games. Please try again.\n";
+            }
+
         }
     }
 
@@ -281,17 +292,27 @@ public:
             double accuracy;
             std::cout << "Enter player " << i + 1 << "'s name: ";
             std::getline(std::cin >> std::ws, name);
-            std::cout << "Enter player " << i + 1 << "'s accuracy: ";
-            std::getline(std::cin >> std::ws, accuracyString);
-            try
+            // while loop to check if the input is a valid number
+            while (true)
             {
-                accuracy = std::stod(accuracyString);
+                std::cout << "Enter player " << i + 1 << "'s accuracy: ";
+                std::getline(std::cin >> std::ws, accuracyString);
+
+                try
+                {
+                    accuracy = std::stod(accuracyString);
+                    if (accuracy >= 0 && accuracy <= 100)
+                    {
+                        break;
+                    }
+                    std::cout << "\n [*] Invalid accuracy. Please try again.\n";
+                }
+                catch (std::invalid_argument)
+                {
+                    std::cout << "\n [*] Invalid accuracy. Please try again.\n";
+                }
             }
-            catch (std::invalid_argument)
-            {
-                std::cout << "\n [*] Invalid accuracy. Please try again.\n";
-                getPlayers();
-            }
+            
             Player* player = new Player{ accuracy, name };
             players.push_back(player);
         }
