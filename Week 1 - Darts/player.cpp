@@ -1,5 +1,6 @@
 #include "darts501.h"
 #include <random>
+#include <cmath>
 
 Darts::Player::Player(double a, std::string n) : accuracy{ a }, name{ n }, score{ 0 }, thrown{ 0 }
 {
@@ -20,7 +21,7 @@ int Darts::Player::getScore() { return score; }
 int Darts::Player::getThrown() { return thrown; }
 double Darts::Player::getRoundAverage() { return static_cast<double>(score) / thrown * 100; }
 double Darts::Player::getAccuracy() { return accuracy; }
-std::vector<double> Darts::Player::getAccuracies() { return accuracies; }
+double Darts::Player::getTotalAccuracy() { return totalAccuracy; }
 std::string Darts::Player::getName() { return name; }
 
 void Darts::Player::throwDart()
@@ -54,7 +55,7 @@ void Darts::Player::newGame()
     thrown = 0;
 }
 
-void Darts::Player::appendAverage()
+void Darts::Player::addAverage()
 {
-    accuracies.push_back(getRoundAverage());
+    totalAccuracy = round((totalAccuracy + getRoundAverage()) / 2);
 }

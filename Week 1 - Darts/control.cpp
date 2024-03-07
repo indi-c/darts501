@@ -15,7 +15,7 @@ Darts::Control::Control()
         getPlayers();
         DartGame game{ players, gamesToPlay };
         game.simulateGame();
-        game.calculateAccuracy();
+        game.displayAccuracies();
     }
 }
 
@@ -61,7 +61,7 @@ void Darts::Control::playSimulatedGame()
     std::vector<Player*> players{ joe, sid };
     DartGame game{ players, 1 };
     game.simulateGame();
-    game.calculateAccuracy();
+    game.displayAccuracies();
 }
 
 void Darts::Control::getPlayerCount()

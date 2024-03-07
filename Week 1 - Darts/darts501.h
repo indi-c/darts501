@@ -11,7 +11,7 @@ namespace Darts {
         int thrown{ 0 }; // Count of darts thrown
         double accuracy; // Player's accuracy percentage
         ::std::string name; // Player's name
-        ::std::vector<double> accuracies; // Vector to store accuracies over rounds
+        double totalAccuracy{}; // double to store the average accuracy of throws
 
         // Function to generate a random number between min and max using the Mersenne Twister engine
         int random(int min, int max);
@@ -25,7 +25,7 @@ namespace Darts {
         int getThrown();
         double getRoundAverage();
         double getAccuracy();
-        ::std::vector<double> getAccuracies();
+        double getTotalAccuracy();
         ::std::string getName();
 
         // Method to simulate a dart throw
@@ -40,8 +40,8 @@ namespace Darts {
         // Resets player's score and thrown count for a new game
         void newGame();
 
-        // Records the average accuracy of throws
-        void appendAverage();
+        // average new accuracy into the total accuracy
+        void addAverage();
     };
 
     // Class to manage the dart game logic and players
@@ -49,7 +49,7 @@ namespace Darts {
     {
     private:
         ::std::vector<Player*> players; // Vector of player pointers
-        int games{ 0 }; // Count of games played
+        int games{ 1 }; // Count of games played
         int gamesToPlay; // Total number of games to play
 
     public:
@@ -60,10 +60,10 @@ namespace Darts {
         void simulateGame();
 
         // Calculates and displays the average accuracy for each player across all games
-        void calculateAccuracy();
+        void displayAccuracies();
 
         // Appends average accuracy of each game
-        void appendAverage();
+        void addAverages();
     };
 
     // Control class to manage the game setup and mode selection

@@ -7,7 +7,7 @@ Darts::DartGame::DartGame(::std::vector<Player*> p, int g) : players{ p }, games
 
 void Darts::DartGame::simulateGame()
 {
-    for (games; games < gamesToPlay; ++games)
+    for (games; games <= gamesToPlay; ++games)
     {
         for (auto p : players)
         {
@@ -23,7 +23,7 @@ void Darts::DartGame::simulateGame()
                 {
                     gameWon = true;
                     std::cout << p->win() << std::endl;
-                    appendAverage();
+                    addAverages();
                     break;
                 }
             }
@@ -31,23 +31,18 @@ void Darts::DartGame::simulateGame()
     }
 }
 
-void Darts::DartGame::calculateAccuracy()
+void Darts::DartGame::displayAccuracies()
 {
     for (auto p : players)
     {
-        double totalAccuracy{ 0 };
-        for (auto a : p->getAccuracies())
-        {
-            totalAccuracy += a;
-        }
-        std::cout << p->getName() << " has an average accuracy of " << totalAccuracy / games << std::endl;
+        std::cout << p->getName() << " has an average accuracy of " << p->getTotalAccuracy() << std::endl;
     }
 }
 
-void Darts::DartGame::appendAverage()
+void Darts::DartGame::addAverages()
 {
     for (auto p : players)
     {
-        p->appendAverage();
+        p->addAverage();
     }
 }
