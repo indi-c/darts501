@@ -24,6 +24,7 @@
     <ProjectGuid>{e557e4a8-6f5a-439e-91c6-485b95d1af9b}</ProjectGuid>
     <RootNamespace>Week1Darts</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>darts501</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
