@@ -24,34 +24,9 @@ double Darts::Player::getAccuracy() { return accuracy; }
 double Darts::Player::getTotalAccuracy() { return totalAccuracy; }
 std::string Darts::Player::getName() { return name; }
 
-void Darts::Player::simpleThrowDart()
+void Darts::Player::newGame(int score)
 {
-    if (score < 10)
-    {
-        ++thrown;
-        if (random(1, 100) <= accuracy)
-        {
-            ++score;
-        }
-    }
-}
-
-void Darts::Player::playRound()
-{
-    for (int i{ 0 }; i < 3; ++i)
-    {
-        simpleThrowDart();
-    }
-}
-
-std::string Darts::Player::win()
-{
-    return name + " wins with " + std::to_string(thrown) + " throws and an average accuracy of " + std::to_string(round(getRoundAverage()));
-}
-
-void Darts::Player::newGame()
-{
-    score = 0;
+    this->score = score;
     thrown = 0;
 }
 
@@ -88,10 +63,6 @@ int Darts::Player::throw_bull() {
 // code modified to fit
 int Darts::Player::throw_treble(int d) {
 
-    // Board neighbours ignoring slot zero
-    int bd[2][21] = { {0,20,15,17,18,12,13,19,16,14,6,8,9,4,11,10,7,2,1,3,5},
-               {0,18,17,19,13,20,10,16,11,12,15,14,5,6,9,2,8,3,4,7,1} };
-
     int r = random(1, 100);
 
     if (r <= accuracy) {
@@ -104,16 +75,16 @@ int Darts::Player::throw_treble(int d) {
         return d;
     }
     else if (r <= 13) {
-        return 3 * bd[0][d];
+        return 3 * board[0][d];
     }
     else if (r <= 16) {
-        return 3 * bd[1][d];
+        return 3 * board[1][d];
     }
     else if (r <= 18) {
-        return bd[0][d];
+        return board[0][d];
     }
     else {
-        return bd[1][d];
+        return board[1][d];
     }
 
 }
@@ -122,10 +93,6 @@ int Darts::Player::throw_treble(int d) {
 // now uses player accuracy value
 // probabilities on miss are the same but are now independent of accuracy
 int Darts::Player::throw_double(int d) {
-
-    // Board neighbours ignoring slot zero
-    int bd[2][21] = { {0,20,15,17,18,12,13,19,16,14,6,8,9,4,11,10,7,2,1,3,5},
-               {0,18,17,19,13,20,10,16,11,12,15,14,5,6,9,2,8,3,4,7,1} };
 
     int r = random(1, 100);
 
@@ -141,26 +108,22 @@ int Darts::Player::throw_double(int d) {
         return d;
     }
     else if (r <= 13) {
-        return 2 * bd[0][d];
+        return 2 * board[0][d];
     }
     else if (r <= 16) {
-        return 2 * bd[1][d];
+        return 2 * board[1][d];
     }
     else if (r <= 18) {
-        return bd[0][d];
+        return board[0][d];
     }
     else {
-        return bd[1][d];
+        return board[1][d];
     }
 }
 
 int Darts::Player::throw_single(int d) {
 
     //  return result of throwing for single d with accuracy 88% (or 80% for the outer)
-
-    // Board neighbours ignoring slot zero
-    int bd[2][21] = { {0,20,15,17,18,12,13,19,16,14,6,8,9,4,11,10,7,2,1,3,5},
-               {0,18,17,19,13,20,10,16,11,12,15,14,5,6,9,2,8,3,4,7,1} };
 
     int r = random(1, 100);
 
@@ -184,11 +147,11 @@ int Darts::Player::throw_single(int d) {
         }
         // 1/3 (4/12) chance as per original
         else if ((r = random(1, 12)) <= 4) {
-            return bd[0][d];
+            return board[0][d];
         }
         // 1/3 (4/12) chance as per original
         else if (r <= 8) {
-            return bd[1][d];
+            return board[1][d];
         }
         // 1/6 (2/12) chance as per original
         else if (r <= 10) {
