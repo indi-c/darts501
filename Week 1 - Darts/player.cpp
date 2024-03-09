@@ -2,7 +2,11 @@
 #include <random>
 #include <cmath>
 
-Darts::Player::Player(double a, std::string n) : accuracy{ a }, name{ n }, score{ 0 }, thrown{ 0 }
+Darts::Player::Player(double a, std::string n) : accuracy{ a }, name{ n }, thrown{ 0 }
+{
+}
+
+Darts::Player::Player()
 {
 }
 

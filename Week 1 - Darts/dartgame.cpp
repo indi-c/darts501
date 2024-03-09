@@ -2,7 +2,7 @@
 #include <iostream>
 #include <cmath>
 
-Darts::DartGame::DartGame(gamePlayers p, Ruleset r) : players{ p }, rules{ r }
+Darts::DartGame::DartGame(GamePlayers p, Ruleset r) : players{ p }, rules{ r }
 {
 }
 

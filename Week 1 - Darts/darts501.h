@@ -37,6 +37,10 @@ namespace Darts {
         int random(int min, int max);
 
     public:
+
+        // Default constructor to initialize a player
+        Player();
+
         // Constructor to initialize a player with accuracy and name
         Player(double a, ::std::string n);
 
@@ -68,7 +72,7 @@ namespace Darts {
     };
 
     // struct to store the two players and order
-    typedef struct gamePlayers
+    typedef struct GamePlayers
     {
         Player playerOne;
         Player playerTwo;
