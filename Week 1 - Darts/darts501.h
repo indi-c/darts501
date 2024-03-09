@@ -72,16 +72,45 @@ namespace Darts {
     };
 
     // struct to store the two players and order
-    typedef struct GamePlayers
+    class GamePlayers
     {
+    public:
         Player playerOne;
         Player playerTwo;
         enum class Order
         {
-			PLAYER_ONE,
-			PLAYER_TWO
-		} order;
-    } GamePlayers;
+            PLAYER_ONE,
+            PLAYER_TWO
+        } order;
+    };
+
+    class PlayerStats : public GamePlayers
+    {
+    public:
+        
+        int repetitions{}; // number of games played
+
+        // accuracy of each player
+        double playerOneAccuracy;
+        double playerTwoAccuracy;
+
+		// average accuracy of each player
+		double playerOneAverage;
+		double playerTwoAverage;
+
+        // match wins for each player
+        int playerOneWins;
+        int playerTwoWins;
+
+		// Constructor to initialize the player stats
+		PlayerStats(GamePlayers p);
+
+		// Calculates the average accuracy of each player
+		void addAverages();
+
+		// Displays the average accuracy of each player
+		void displayAverages();
+    };
 
     // struct to store the rules of the game
     typedef struct Ruleset

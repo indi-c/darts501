@@ -1,5 +1,7 @@
 #include "darts501.h"
 #include <iostream>
+#include <thread>
+#include <vector>
 
 Darts::Control::Control()
 {
@@ -65,6 +67,48 @@ void Darts::Control::getGameMode()
 
 void Darts::Control::playMatches()
 {
+    // get number of threads supported by the system
+    int numThreads = std::thread::hardware_concurrency();
+    if (numThreads == 0)
+    {
+        numThreads = 1;
+    }
+
+    // remainderRepetitions is the number of repetitions that will be left over after the repetitions are divided by the number of threads
+    int remainderRepetitions{ (rules.repetitions % numThreads) };
+    // subtract the remainder from the total repetitions leaving a multiple of the number of threads
+    rules.repetitions -= remainderRepetitions;
+
+    // vector to store the threads
+    std::vector<std::thread> threads;
+    // vector to store the games
+    std::vector<DartGame> games;
+
+    // create the games for the remainder repetitions
+    for (int i{ 0 }; i < remainderRepetitions; ++i)
+    {
+        games.push_back(DartGame(players, rules));
+    }
+
+    // create the threads for DartGame::simulateMatch for the remainder repetitions
+    for (int i{ 0 }; i < remainderRepetitions; ++i)
+    {
+        threads.push_back(std::thread(&DartGame::simulateMatch, &games[i]));
+    }
+
+    // join the threads
+    for (auto& th : threads)
+    {
+        if (th.joinable())
+        {
+            th.join();
+        }
+    }
+
+    // clear the threads vector
+    threads.clear();
+    // resize the games vector to the number of threads
+    games.resize(numThreads);
 
 }
 
