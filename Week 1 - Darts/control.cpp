@@ -107,9 +107,44 @@ void Darts::Control::playMatches()
 
     // clear the threads vector
     threads.clear();
+
+    // resize the threads vector to the number of repetitions
+    threads.resize(numThreads);
+
+    // clear the games vector
+    games.clear();
+
     // resize the games vector to the number of threads
     games.resize(numThreads);
 
+	// create games and threads for the remaining repetitions in multiples of the number of threads
+    for (int i{ rules.repetitions }; i > 0; i -= numThreads)
+    {
+        // create the games for each thread
+        for (int j{ 0 }; j < numThreads; ++j)
+        {
+            games[j] = DartGame(players, rules);
+        }
+
+        // create the threads for DartGame::simulateMatch for each game
+        for (int j{ 0 }; j < numThreads; ++j)
+		{
+            threads[j] = std::thread(&DartGame::simulateMatch, &games[j]);
+		}
+
+        // join the threads
+        for (auto& th : threads)
+		{
+			if (th.joinable())
+			{
+				th.join();
+			}
+		}
+
+        // clear vectors
+        threads.clear();
+        games.clear();
+    }
 }
 
 void Darts::Control::inputRepetitions()

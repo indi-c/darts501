@@ -86,21 +86,38 @@ namespace Darts {
 
     class PlayerStats : public GamePlayers
     {
-    public:
-        
-        int repetitions{}; // number of games played
+    private:
+
+        // number of games played
+        int repetitions{}; 
 
         // accuracy of each player
         double playerOneAccuracy;
         double playerTwoAccuracy;
 
-		// average accuracy of each player
-		double playerOneAverage;
-		double playerTwoAverage;
+        // average accuracy of each player
+        double playerOneAverage;
+        double playerTwoAverage;
 
         // match wins for each player
         int playerOneWins;
         int playerTwoWins;
+
+    public:
+
+        // getter methods
+        double getPlayerOneAverage();
+        double getPlayerTwoAverage();
+
+        int getPlayerOneWins();
+        int getPlayerTwoWins();
+
+		// setter methods
+        void setRepetitions(int r);
+        void setPlayerOneAccuracy(double a);
+        void setPlayerTwoAccuracy(double a);
+		void setPlayerOneWins(int w);
+		void setPlayerTwoWins(int w);
 
 		// Constructor to initialize the player stats
 		PlayerStats(GamePlayers p);
