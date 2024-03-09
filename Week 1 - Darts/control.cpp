@@ -4,7 +4,25 @@
 Darts::Control::Control()
 {
     getGameMode();
-    
+    if (mode == GameMode::CUSTOMISED)
+	{
+		inputPlayerAccuracies();
+		inputRepetitions();
+		inputStartPoints();
+		inputGamesToWin();
+		inputSetsToWin();
+	}
+	else
+	{
+		inputRepetitions();
+        rules.gamesToWin = 3;
+        rules.setsToWin = 7;
+        rules.startPoints = 501;
+        players.playerOne = Player(80, "Joe");
+        players.playerTwo = Player(80, "Sid");
+        players.order = GamePlayers::Order::PLAYER_TWO; // sid goes first
+	}
+    playMatches();
 }
 
 void Darts::Control::getGameMode()
@@ -116,22 +134,105 @@ void Darts::Control::inputPlayerAccuracies()
 
 void Darts::Control::inputRepetitions()
 {
+    std::string repetitionsString;
+    // while loop to check if the input is a valid number
+    while (true)
+    {
+		std::cout << "How many matches should be played? ";
+		std::getline(std::cin >> std::ws, repetitionsString);
 
+		try
+		{
+			rules.repetitions = std::stoi(repetitionsString);
+			if (rules.repetitions > 0)
+			{
+				break;
+			}
+			std::cout << "\n [*] Invalid number of matches. Please try again.\n";
+		}
+		catch (std::invalid_argument)
+		{
+			std::cout << "\n [*] Invalid number of matches. Please try again.\n";
+		}
+    }
 }
 
 void Darts::Control::inputGamesToWin()
 {
+    std::string GamesToWinString;
 
+    // while loop to check if the input is a valid number
+    while (true)
+	{
+		std::cout << "How many games should be won to win a set? ";
+		std::getline(std::cin >> std::ws, GamesToWinString);
+
+		try
+		{
+			rules.gamesToWin = std::stoi(GamesToWinString);
+			if (rules.gamesToWin > 0)
+			{
+				break;
+			}
+			std::cout << "\n [*] Invalid number of games. Please try again.\n";
+		}
+		catch (std::invalid_argument)
+		{
+			std::cout << "\n [*] Invalid number of games. Please try again.\n";
+		}
+	}
 }
 
 void Darts::Control::inputSetsToWin()
 {
+    std::string SetsToWinString;
 
+    // while loop to check if the input is a valid number
+    while (true)
+    {
+        std::cout << "How many sets should be won to win the match? ";
+        std::getline(std::cin >> std::ws, SetsToWinString);
+
+        try
+        {
+            rules.setsToWin = std::stoi(SetsToWinString);
+            if (rules.setsToWin > 0)
+            {
+                break;
+            }
+            std::cout << "\n [*] Invalid number of sets. Please try again.\n";
+        }
+        catch (std::invalid_argument)
+        {
+            std::cout << "\n [*] Invalid number of sets. Please try again.\n";
+        }
+    }
 }
 
 void Darts::Control::inputStartPoints()
 {
+    std::string StartPointsString;
 
+    // while loop to check if the input is a valid number
+    while (true)
+	{
+		std::cout << "What should the starting score be? ";
+		std::getline(std::cin >> std::ws, StartPointsString);
+
+		try
+		{
+			rules.startPoints = std::stoi(StartPointsString);
+			if (rules.startPoints > 0)
+			{
+				break;
+			}
+			std::cout << "\n [*] Invalid starting score. Please try again.\n";
+		}
+		catch (std::invalid_argument)
+		{
+			std::cout << "\n [*] Invalid starting score. Please try again.\n";
+		}
+	}
 }
 
 Darts::Control::~Control()
