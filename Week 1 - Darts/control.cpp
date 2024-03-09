@@ -4,27 +4,18 @@
 Darts::Control::Control()
 {
     getGameMode();
-    if (mode == GameMode::SIMULATED_GAME)
-    {
-        playSimulatedGame();
-    }
-    else if (mode == GameMode::CUSTOM_GAME)
-    {
-        getPlayerCount();
-        getGamesToPlay();
-        getPlayers();
-        DartGame game{ players, gamesToPlay };
-        game.simulateGame();
-        game.displayAccuracies();
-    }
+    
 }
 
 void Darts::Control::getGameMode()
 {
-    std::cout << "Welcome to Darts!\n";
-    std::cout << "Please select a game mode:\n";
-    std::cout << "1. Simulated Game between Joe and Sid\n";
+    std::cout << "Welcome to Darts 501!\n";
+    std::cout << "Please select a game mode:\n\n";
+    std::cout << "1. 501 match between Joe and sid\n";
+    std::cout << " - Sid starts first\n - score starts at 501\n - first to 3 games wins a set\n - first to 7 sets wins the match\n\n";
     std::cout << "2. Custom Game Settings\n";
+    std::cout << " - Choose who starts first\n - choose starting score\n - choose how many games to win a set\n - choose how many sets to win a match\n";
+    std::cout << " - change player accuracies\n\n";
     std::cout << "Enter 1 or 2: ";
     int choice{ 0 };
     std::string choiceString;
@@ -37,12 +28,12 @@ void Darts::Control::getGameMode()
             choice = std::stoi(choiceString);
             if (choice == 1)
             {
-                mode = GameMode::SIMULATED_GAME;
+                mode = GameMode::S_AND_J_SIM;
                 break;
             }
             else if (choice == 2)
             {
-                mode = GameMode::CUSTOM_GAME;
+                mode = GameMode::CUSTOMISED;
                 break;
             }
             std::cout << "\n [*] Invalid choice. Please try again.\n";
@@ -54,14 +45,9 @@ void Darts::Control::getGameMode()
     }
 }
 
-void Darts::Control::playSimulatedGame()
+void Darts::Control::playMatches()
 {
-    Player* joe = new Player{ 71, "Joe" };
-    Player* sid = new Player{ 73, "Sid" };
-    std::vector<Player*> players{ joe, sid };
-    DartGame game{ players, 1 };
-    game.simulateGame();
-    game.displayAccuracies();
+
 }
 
 void Darts::Control::getPlayerCount()

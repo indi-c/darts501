@@ -2,48 +2,23 @@
 #include <iostream>
 #include <cmath>
 
-Darts::DartGame::DartGame(::std::vector<Player*> p, int g) : players{ p }, gamesToPlay{ g }
+Darts::DartGame::DartGame(gamePlayers p, Ruleset r) : players{ p }, rules{ r }
 {
 }
 
 void Darts::DartGame::simulateGame()
 {
-    for (games; games <= gamesToPlay; ++games)
-    {
-        for (auto p : players)
-        {
-            p->newGame();
-        }
-        bool gameWon{ false };
-        while (!gameWon)
-        {
-            for (auto p : players)
-            {
-                p->playRound();
-                if (p->getScore() >= 10)
-                {
-                    gameWon = true;
-                    // std::cout << p->win() << std::endl;
-                    addAverages();
-                    break;
-                }
-            }
-        }
-    }
+    
 }
 
 void Darts::DartGame::displayAccuracies()
 {
-    for (auto p : players)
-    {
-        std::cout << p->getName() << " has an average accuracy of " << round(p->getTotalAccuracy()) << std::endl;
-    }
+    std::cout << players.playerOne->getName() << " has an average accuracy of " << round(p->getTotalAccuracy()) << '\n';
+    std::cout << players.playerTwo->getName() << " has an average accuracy of " << round(p->getTotalAccuracy()) << '\n';
 }
 
 void Darts::DartGame::addAverages()
 {
-    for (auto p : players)
-    {
-        p->addAverage(games);
-    }
+        players.playerOne->addAverage(games);
+        players.playerTwo->addAverage(games);
 }

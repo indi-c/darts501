@@ -1,6 +1,7 @@
 #pragma once
-#include <vector>
 #include <string>
+
+// interface for darts501 which stores all classes and structs in Darts namespace
 
 namespace Darts {
 
@@ -12,6 +13,21 @@ namespace Darts {
         double accuracy; // Player's accuracy percentage
         ::std::string name; // Player's name
         double totalAccuracy{}; // double to store the average accuracy of throws
+
+        // Function pointer type for dart throws
+        typedef void (*dartThrow)(int);
+        
+        // struct to store the throw type and target
+        // target should be 25 for outer bull, 50 for inner bull, otherwise 1-20
+        typedef struct Throw
+        {
+            int target;
+            dartThrow throwType;
+        } Throw;
+
+        // Function to decide which throw to make
+        // Returns a struct containing the throw type and target
+        Throw decideThrow(); 
 
         // board representation thanks to code given for task
         int board[2][21] = { {0,20,15,17,18,12,13,19,16,14,6,8,9,4,11,10,7,2,1,3,5},
@@ -39,49 +55,50 @@ namespace Darts {
         void addAverage(int games);
 
         // throw at the bull
-        int throw_bull();
+        int throwBull(int d);
 
         // throw for a treble
-        int throw_treble(int d);
+        int throwTreble(int d);
 
         // throw for a double
-        int throw_double(int d);
+        int throwDouble(int d);
 
         // throw for a single
-        int throw_single(int d);
+        int throwSingle(int d);
     };
 
     // struct to store the two players and order
     typedef struct gamePlayers
     {
-        Player* playerOne;
-        Player* playerTwo;
+        Player playerOne;
+        Player playerTwo;
     } gamePlayers;
 
     // struct to store the rules of the game
-    typedef struct ruleSet
+    typedef struct Ruleset
     {
         int startPoints;
         int gamesToWin;
         int setsToWin;
         int repetitions;
-    } ruleSet;
+    } ruleset;
 
     // Class to manage the dart game logic and players
     class DartGame
     {
     private:
 
-        struct gamePlayers players;
-        int games{ 1 }; // Count of games played
-        int gamesToPlay; // Total number of games to play
+        gamePlayers players;
+        Ruleset rules;
+
+        int gameCount{ 1 }; // Count of games played
 
     public:
         // Constructor to initialize the game with players and the number of games
-        DartGame(gamePlayers p, int g);
+        DartGame(gamePlayers p, Ruleset r);
 
         // Simulates the entire game
-        void simulateGame();
+        void simulateMatch();
 
         // Calculates and displays the average accuracy for each player across all games
         void displayAccuracies();
@@ -94,15 +111,14 @@ namespace Darts {
     class Control
     {
     private:
-        std::vector<Player*> players; // Vector of player pointers
-        int gamesToPlay{ 0 }; // Number of games to play
-        int playerCount{ 0 }; // Number of players
         enum class GameMode // Enum for game mode selection
         {
-            SIMULATED_GAME,
-            CUSTOM_GAME
+            S_AND_J_SIM,
+            CUSTOMISED
         };
         GameMode mode; // Current game mode
+        Ruleset rules; // Rules of the game
+        gamePlayers players; // Players in the game
 
     public:
         // Constructor to initiate the game setup process
@@ -111,17 +127,23 @@ namespace Darts {
         // Gets the game mode from the user
         void getGameMode();
 
-        // Plays a simulated game between Joe and Sid
-        void playSimulatedGame();
-
-        // Gets the number of players from the user
-        void getPlayerCount();
+        // Plays a simulated match between players
+        void playMatches();
 
         // Gets the number of games to play from the user
-        void getGamesToPlay();
+        void getRepetitions();
 
         // Prompts the user for player names and accuracies
         void getPlayers();
+
+        // Prompts the user for starting points
+        void getStartPoints();
+
+        // Prompts the user for the number of games to win in a set
+        void getGamesToWin();
+
+        // Prompts the user for the number of sets to win for a match win
+        void setsToWin();
 
         // Destructor to free memory allocated to player pointers
         ~Control();
