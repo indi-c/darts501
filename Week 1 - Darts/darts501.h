@@ -136,25 +136,25 @@ namespace Darts {
         // Gets the game mode from the user
         void getGameMode();
 
-        // Plays a simulated match between players
+        // plays as many matches as specified by the user
         void playMatches();
 
-        // Gets the number of games to play from the user
-        void getRepetitions();
+        // input repetitions
+        void inputRepetitions();
 
-        // Prompts the user for player accuracies
-        void getPlayerAccuracies();
+        // input player accuracies
+        void inputPlayerAccuracies();
 
-        // Prompts the user for starting points
-        void getStartPoints();
+        // input round starting points
+        void inputStartPoints();
 
-        // Prompts the user for the number of games to win in a set
-        void getGamesToWin();
+        // input games to win a set
+        void inputGamesToWin();
 
-        // Prompts the user for the number of sets to win for a match win
-        void setsToWin();
+        // input sets to win the match
+        void inputSetsToWin();
 
-        // Destructor to free memory allocated to player pointers
+        // Destructor if needed
         ~Control();
     };
 }

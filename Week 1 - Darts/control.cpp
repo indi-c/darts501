@@ -50,7 +50,7 @@ void Darts::Control::playMatches()
 
 }
 
-void Darts::Control::getRepetitions()
+void Darts::Control::inputRepetitions()
 {
     // while loop to check if the input is a valid number
     while (true)
@@ -76,7 +76,7 @@ void Darts::Control::getRepetitions()
     }
 }
 
-void Darts::Control::getPlayerAccuracies()
+void Darts::Control::inputPlayerAccuracies()
 {
     std::cout << "Enter player accuracies\n";
     std::cout << "Accuracy must be a number between 0 and 100\n";
@@ -114,6 +114,25 @@ void Darts::Control::getPlayerAccuracies()
     players.playerTwo = Player(accuracies[1], names[1]);
 }
 
+void Darts::Control::inputRepetitions()
+{
+
+}
+
+void Darts::Control::inputGamesToWin()
+{
+
+}
+
+void Darts::Control::inputSetsToWin()
+{
+
+}
+
+void Darts::Control::inputStartPoints()
+{
+
+}
 
 Darts::Control::~Control()
 {

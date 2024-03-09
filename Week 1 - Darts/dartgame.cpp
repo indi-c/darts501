@@ -6,7 +6,7 @@ Darts::DartGame::DartGame(GamePlayers p, Ruleset r) : players{ p }, rules{ r }
 {
 }
 
-void Darts::DartGame::simulateGame()
+void Darts::DartGame::simulateMatch()
 {
     
 }

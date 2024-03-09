@@ -171,3 +171,8 @@ int Darts::Player::throwSingle(int d) {
         return 2 * d;
     }
 }
+
+Darts::Player::Throw Darts::Player::decideThrow()
+{
+
+}
