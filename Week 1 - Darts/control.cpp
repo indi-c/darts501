@@ -50,80 +50,54 @@ void Darts::Control::playMatches()
 
 }
 
-void Darts::Control::getPlayerCount()
+void Darts::Control::getRepetitions()
 {
     // while loop to check if the input is a valid number
     while (true)
     {
-        std::cout << "How many players? ";
-        std::string playerCountString;
-        std::getline(std::cin >> std::ws, playerCountString);
+        std::cout << "How many matches should be played? ";
+        std::string matchesToPlayString;
+        std::getline(std::cin >> std::ws, matchesToPlayString);
 
         try
         {
-            playerCount = std::stoi(playerCountString);
-            if (playerCount > 0)
+            rules.repetitions = std::stoi(matchesToPlayString);
+            if (rules.repetitions > 0)
             {
                 break;
             }
-            std::cout << "\n [*] Invalid number of players. Please try again.\n";
+            std::cout << "\n [*] Invalid number of matches. Please try again.\n";
         }
         catch (std::invalid_argument)
         {
-            std::cout << "\n [*] Invalid number of players. Please try again.\n";
-        }
-    }
-}
-
-void Darts::Control::getGamesToPlay()
-{
-    // while loop to check if the input is a valid number
-    while (true)
-    {
-        std::cout << "How many games? ";
-        std::string gamesToPlayString;
-        std::getline(std::cin >> std::ws, gamesToPlayString);
-
-        try
-        {
-            gamesToPlay = std::stoi(gamesToPlayString);
-            if (gamesToPlay > 0)
-            {
-                break;
-            }
-            std::cout << "\n [*] Invalid number of games. Please try again.\n";
-        }
-        catch (std::invalid_argument)
-        {
-            std::cout << "\n [*] Invalid number of games. Please try again.\n";
+            std::cout << "\n [*] Invalid number of matches. Please try again.\n";
         }
 
     }
 }
 
-void Darts::Control::getPlayers()
+void Darts::Control::getPlayerAccuracies()
 {
-    std::cout << "Enter player names and accuracies\n";
+    std::cout << "Enter player accuracies\n";
     std::cout << "Accuracy must be a number between 0 and 100\n";
-    std::cout << "Players will play in the order they are entered\n";
 
-    for (int i{ 0 }; i < playerCount; ++i)
+    std::string accuracyString;
+    double accuracies[2];
+
+    std::string names[2] = { "Joe", "Sid" };
+
+    for (int i{ 0 }; i < 2; ++i)
     {
-        std::string name;
-        std::string accuracyString;
-        double accuracy;
-        std::cout << "Enter player " << i + 1 << "'s name: ";
-        std::getline(std::cin >> std::ws, name);
         // while loop to check if the input is a valid number
         while (true)
         {
-            std::cout << "Enter player " << i + 1 << "'s accuracy: ";
+            std::cout << "Enter " << names[i] << "'s accuracy: ";
             std::getline(std::cin >> std::ws, accuracyString);
 
             try
             {
-                accuracy = std::stod(accuracyString);
-                if (accuracy >= 0 && accuracy <= 100)
+                accuracies[i] = std::stod(accuracyString);
+                if (accuracies[i] >= 0 && accuracies[i] <= 100)
                 {
                     break;
                 }
@@ -134,17 +108,13 @@ void Darts::Control::getPlayers()
                 std::cout << "\n [*] Invalid accuracy. Please try again.\n";
             }
         }
-
-        Player* player = new Player{ accuracy, name };
-        players.push_back(player);
     }
+
+    players.playerOne = Player(accuracies[0], names[0]);
+    players.playerTwo = Player(accuracies[1], names[1]);
 }
 
 
 Darts::Control::~Control()
 {
-        for (auto p : players)
-        {
-            delete p;
-        }
 }

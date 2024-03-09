@@ -72,7 +72,12 @@ namespace Darts {
     {
         Player playerOne;
         Player playerTwo;
-    } gamePlayers;
+        enum class Order
+        {
+			PLAYER_ONE,
+			PLAYER_TWO
+		} order;
+    } GamePlayers;
 
     // struct to store the rules of the game
     typedef struct Ruleset
@@ -81,21 +86,21 @@ namespace Darts {
         int gamesToWin;
         int setsToWin;
         int repetitions;
-    } ruleset;
+    } Ruleset;
 
     // Class to manage the dart game logic and players
     class DartGame
     {
     private:
 
-        gamePlayers players;
+        GamePlayers players;
         Ruleset rules;
 
         int gameCount{ 1 }; // Count of games played
 
     public:
         // Constructor to initialize the game with players and the number of games
-        DartGame(gamePlayers p, Ruleset r);
+        DartGame(GamePlayers p, Ruleset r);
 
         // Simulates the entire game
         void simulateMatch();
@@ -118,7 +123,7 @@ namespace Darts {
         };
         GameMode mode; // Current game mode
         Ruleset rules; // Rules of the game
-        gamePlayers players; // Players in the game
+        GamePlayers players; // Players in the game
 
     public:
         // Constructor to initiate the game setup process
@@ -133,8 +138,8 @@ namespace Darts {
         // Gets the number of games to play from the user
         void getRepetitions();
 
-        // Prompts the user for player names and accuracies
-        void getPlayers();
+        // Prompts the user for player accuracies
+        void getPlayerAccuracies();
 
         // Prompts the user for starting points
         void getStartPoints();
