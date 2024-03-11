@@ -24,7 +24,7 @@ Darts::Control::Control()
         players.playerTwo = Player(80, "Sid");
         players.order = GamePlayers::Order::PLAYER_TWO; // sid goes first
 	}
-    playMatches();
+    createMatchThreads();
 }
 
 void Darts::Control::getGameMode()
@@ -65,7 +65,7 @@ void Darts::Control::getGameMode()
     }
 }
 
-void Darts::Control::playMatches()
+void Darts::Control::createMatchThreads()
 {
     // get number of threads supported by the system
     int numThreads = std::thread::hardware_concurrency();
@@ -73,77 +73,38 @@ void Darts::Control::playMatches()
     {
         numThreads = 1;
     }
-
-    // remainderRepetitions is the number of repetitions that will be left over after the repetitions are divided by the number of threads
-    int remainderRepetitions{ (rules.repetitions % numThreads) };
-    // subtract the remainder from the total repetitions leaving a multiple of the number of threads
-    rules.repetitions -= remainderRepetitions;
-
+   
     // vector to store the threads
     std::vector<std::thread> threads;
-    // vector to store the games
-    std::vector<DartGame> games;
+    threads.reserve(numThreads);
 
-    // create the games for the remainder repetitions
-    for (int i{ 0 }; i < remainderRepetitions; ++i)
+    // create threads
+    for (int i{ 0 }; i < numThreads; ++i)
+	{
+		threads.emplace_back(&Darts::Control::simulateMatches, this);
+	}
+
+	// join threads
+	for (int i{ 0 }; i < numThreads; ++i)
+	{
+		threads[i].join();
+	}
+}
+
+void Darts::Control::simulateMatches()
+{
+    while (matchCount <= rules.repetitions)
     {
-        games.push_back(DartGame(players, rules));
-    }
+        // lock the match count mutex
+        mutexMatchCount.lock();
+        ++matchCount;
+        // unlock the match count mutex
+        mutexMatchCount.unlock();
 
-    // create the threads for DartGame::simulateMatch for the remainder repetitions
-    for (int i{ 0 }; i < remainderRepetitions; ++i)
-    {
-        threads.push_back(std::thread(&DartGame::simulateMatch, &games[i]));
-    }
+        DartGame game(players, rules);
+        game.simulateMatch();
 
-    // join the threads
-    for (auto& th : threads)
-    {
-        if (th.joinable())
-        {
-            th.join();
-        }
-    }
-
-    // clear the threads vector
-    threads.clear();
-
-    // resize the threads vector to the number of repetitions
-    threads.resize(numThreads);
-
-    // clear the games vector
-    games.clear();
-
-    // resize the games vector to the number of threads
-    games.resize(numThreads);
-
-	// create games and threads for the remaining repetitions in multiples of the number of threads
-    for (int i{ rules.repetitions }; i > 0; i -= numThreads)
-    {
-        // create the games for each thread
-        for (int j{ 0 }; j < numThreads; ++j)
-        {
-            games[j] = DartGame(players, rules);
-        }
-
-        // create the threads for DartGame::simulateMatch for each game
-        for (int j{ 0 }; j < numThreads; ++j)
-		{
-            threads[j] = std::thread(&DartGame::simulateMatch, &games[j]);
-		}
-
-        // join the threads
-        for (auto& th : threads)
-		{
-			if (th.joinable())
-			{
-				th.join();
-			}
-		}
-
-        // clear vectors
-        threads.clear();
-        games.clear();
+        // call some function here to get the data from game and store it
     }
 }
 

@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <mutex>
 
 // interface for darts501 which stores all classes and structs in Darts namespace
 
@@ -30,7 +31,7 @@ namespace Darts {
         Throw decideThrow(); 
 
         // board representation thanks to code given for task
-        int board[2][21] = { {0,20,15,17,18,12,13,19,16,14,6,8,9,4,11,10,7,2,1,3,5},
+        const int board[2][21] = { {0,20,15,17,18,12,13,19,16,14,6,8,9,4,11,10,7,2,1,3,5},
                {0,18,17,19,13,20,10,16,11,12,15,14,5,6,9,2,8,3,4,7,1} };
 
         // Function to generate a random number between min and max using the Mersenne Twister engine
@@ -84,6 +85,9 @@ namespace Darts {
         } order;
     };
 
+
+    // remove inheritance from GamePlayers
+    // use composition instead
     class PlayerStats : public GamePlayers
     {
     private:
@@ -175,6 +179,11 @@ namespace Darts {
         Ruleset rules; // Rules of the game
         GamePlayers players; // Players in the game
 
+        // mutex for thread safety used in playMatches
+        ::std::mutex mutexMatchCount;
+
+        int matchCount{ 1 }; // Count of matches played
+
     public:
         // Constructor to initiate the game setup process
         Control();
@@ -182,7 +191,11 @@ namespace Darts {
         // Gets the game mode from the user
         void getGameMode();
 
-        // plays as many matches as specified by the user
+        // creates threads for the matches and joins them
+        void createMatchThreads();
+
+        // loop for threaded matches called by playMatches
+        // loops through number of repetitions and calls simulateMatch decrementing each time
         void playMatches();
 
         // input repetitions
