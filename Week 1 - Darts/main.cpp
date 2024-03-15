@@ -3,4 +3,5 @@
 int main()
 {
     Darts::Control control; // Instantiates the Control class to start the game
+    return 0;
 }

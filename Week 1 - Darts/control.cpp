@@ -22,7 +22,7 @@ Darts::Control::Control()
         rules.startPoints = 501;
         players.playerOne = Player(80, "Joe");
         players.playerTwo = Player(80, "Sid");
-        players.order = GamePlayers::Order::PLAYER_TWO; // sid goes first
+        players.ToPlay = GamePlayers::ToPlay::PLAYER_TWO; // sid goes first
 	}
     createMatchThreads();
 }
@@ -81,6 +81,7 @@ void Darts::Control::createMatchThreads()
     // create threads
     for (int i{ 0 }; i < numThreads; ++i)
 	{
+        // emplace to construct in place rather than copy
 		threads.emplace_back(&Darts::Control::simulateMatches, this);
 	}
 

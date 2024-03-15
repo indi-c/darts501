@@ -1,6 +1,7 @@
 #include "darts501.h"
 #include <random>
 #include <cmath>
+#include <array>
 
 Darts::Player::Player(double a, std::string n) : accuracy{ a }, name{ n }, thrown{ 0 }
 {
@@ -22,11 +23,18 @@ int Darts::Player::random(int min, int max)
 // Getter member functions
 
 int Darts::Player::getScore() { return score; }
+int Darts::Player::getThrowScore() { return throwScore; }
+int Darts::Player::getSetsWon() { return setsWon; }
+int Darts::Player::getGamesWon() { return gamesWon; }
 int Darts::Player::getThrown() { return thrown; }
 double Darts::Player::getRoundAverage() { return static_cast<double>(score) / thrown * 100; }
 double Darts::Player::getAccuracy() { return accuracy; }
 double Darts::Player::getTotalAccuracy() { return totalAccuracy; }
 std::string Darts::Player::getName() { return name; }
+
+// increment member functions
+void Darts::Player::incrementGamesWon() { gamesWon++; }
+void Darts::Player::incrementSetsWon() { setsWon++; }
 
 void Darts::Player::newGame(int score)
 {
@@ -34,14 +42,56 @@ void Darts::Player::newGame(int score)
     thrown = 0;
 }
 
-void Darts::Player::addAverage(int games)
+// calculate throws by bruteforce adding them to a vector
+void Darts::Player::calculateThrows()
 {
-    totalAccuracy = ((totalAccuracy * (games - 1)) + getRoundAverage()) / games;
+    // storing single scores
+    std::array<int, 20> singleScores{
+                        1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
+                        15, 16, 17, 18, 19, 20
+    };
+    
+    // storing double scores
+    std::array<int, 20> doubleScores{
+                        2, 4, 6, 8, 10, 12, 14, 16, 18, 20,
+                        22, 24, 26, 28, 30, 32, 34, 36, 38, 40
+    };
+
+    // scoring triple scores
+    std::array<int, 20> tripleScores{
+                        3, 6, 9, 12, 15, 18, 21, 24, 27, 30,
+                        33, 36, 39, 42, 45, 48, 51, 54, 57, 60
+    };
+
+    std::array<int, 2> bullScores{
+                       25, 50
+    };
+
 }
 
-// moved outerbull here to allow for api consistency
+// throws a dart by deciding throw and calling the appropriate function
+void Darts::Player::throwDart()
+{
+	// decide throw
+	Throw t = decideThrow();
 
-int Darts::Player::throwBull(int d) {
+    (this->*(t.throwType))(t.target);
+}
+
+// analyse game state and decide throw
+Darts::Player::Throw Darts::Player::decideThrow()
+{
+    // if score is greater than 170, aim for a score of 170
+    // 170 is derived from the fact that 170 is the highest score that can be achieved with 3 darts
+    if (score > 170)
+    {
+
+	}
+}
+
+// moved outerbull here to allow for interface consistency
+// function changed due to odd behaviour in provided code
+void Darts::Player::throwBull(int d) {
 
     // Throw for the bull 
 
@@ -85,7 +135,7 @@ int Darts::Player::throwBull(int d) {
 // mostly unmodified from given code
 // assumes intention of 80% accuracy originally
 // code modified to fit
-int Darts::Player::throwTreble(int d) {
+void Darts::Player::throwTreble(int d) {
 
     int r = random(1, 100);
 
@@ -116,7 +166,7 @@ int Darts::Player::throwTreble(int d) {
 // mostly unmodified from given code
 // now uses player accuracy value
 // probabilities on miss are the same but are now independent of accuracy
-int Darts::Player::throwDouble(int d) {
+void Darts::Player::throwDouble(int d) {
 
     int r = random(1, 100);
 
@@ -145,7 +195,7 @@ int Darts::Player::throwDouble(int d) {
     }
 }
 
-int Darts::Player::throwSingle(int d) {
+void Darts::Player::throwSingle(int d) {
 
     //  return result of throwing for single d with accuracy 88% (or 80% for the outer)
 
