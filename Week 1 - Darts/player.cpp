@@ -183,7 +183,7 @@ void Darts::Player::throwBull(int d) {
     if (d == 50)
     {
         if (r <= accuracy) {
-            return 50;
+            throwScore = 50;
         }
         // threshold changed to make simulation more realistic
         // idea is that players with accuracies > 85 will always hit the outer bull
@@ -191,26 +191,26 @@ void Darts::Player::throwBull(int d) {
         // and players with accuracies < 50 are likely to miss completely as accuracy 0
         // arbitrary but interesting
         else if (r <= (accuracy + ((accuracy - 50) * (accuracy * 0.005)))) {
-            return 25;
+            throwScore = 25;
         }
         // misses outer bull, hitting a random single
         else {
-            return random(1, 20);
+            throwScore = random(1, 20);
         }
     }
     else
     {
         if (r <= accuracy) {
-            return 25;
+            throwScore = 25;
         }
         // 50% chance of bullseye miss (assuming 50% chance of even number)
         // as per original design but inclusive of accuracy
         else if (r % 2 == 0) {
-            return 50;
+            throwScore = 50;
         }
         // 50% chance of single miss
         else {
-            return random(1, 20);
+            throwScore = random(1, 20);
         }
     }
 }
@@ -223,25 +223,25 @@ void Darts::Player::throwTreble(int d) {
     int r = random(1, 100);
 
     if (r <= accuracy) {
-        return 3 * d;
+        throwScore = 3 * d;
     }
 
     // intentions unsure but changed to reflect an assumed intention
     // that the accuracy was 80% and as such a single was 50% etc.
     else if ((r = random(1, 20) <= 10)) {
-        return d;
+        throwScore = d;
     }
     else if (r <= 13) {
-        return 3 * board[0][d];
+        throwScore = 3 * board[0][d];
     }
     else if (r <= 16) {
-        return 3 * board[1][d];
+        throwScore = 3 * board[1][d];
     }
     else if (r <= 18) {
-        return board[0][d];
+        throwScore = board[0][d];
     }
     else {
-        return board[1][d];
+        throwScore = board[1][d];
     }
 
 }
@@ -255,27 +255,27 @@ void Darts::Player::throwDouble(int d) {
 
     // accuracy + 5 to simulate the ease of hitting a double compared to a treble
     if (r <= accuracy + 5) {
-        return 2 * d;
+        throwScore = 2 * d;
     }
 
     // following values use the same probability as the original code on miss
     else if ((r = random(1, 20) <= 5)) {
-        return 0;
+        throwScore = 0;
     }
     else if (r <= 10) {
-        return d;
+        throwScore = d;
     }
     else if (r <= 13) {
-        return 2 * board[0][d];
+        throwScore = 2 * board[0][d];
     }
     else if (r <= 16) {
-        return 2 * board[1][d];
+        throwScore = 2 * board[1][d];
     }
     else if (r <= 18) {
-        return board[0][d];
+        throwScore = board[0][d];
     }
     else {
-        return board[1][d];
+        throwScore = board[1][d];
     }
 }
 
@@ -285,27 +285,22 @@ void Darts::Player::throwSingle(int d) {
 
     // accuracy + 10 to simulate the ease of hitting a single compared to a double or treble
     if (r <= accuracy + 10) {
-        return d;
+        throwScore = d;
     }
     // 1/3 (4/12) chance as per original
     else if ((r = random(1, 12)) <= 4) {
-        return board[0][d];
+        throwScore = board[0][d];
     }
     // 1/3 (4/12) chance as per original
     else if (r <= 8) {
-        return board[1][d];
+        throwScore = board[1][d];
     }
     // 1/6 (2/12) chance as per original
     else if (r <= 10) {
-        return 3 * d;
+        throwScore = 3 * d;
     }
     // 1/6 (2/12) chance as per original
     else {
-        return 2 * d;
+        throwScore = 2 * d;
     }
-}
-
-Darts::Player::Throw Darts::Player::decideThrow()
-{
-
 }

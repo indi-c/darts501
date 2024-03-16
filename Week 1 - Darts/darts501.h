@@ -3,7 +3,6 @@
 #include <mutex>
 #include <array>
 #include <vector>
-#include <unordered_map>
 
 // interface for darts501 which stores all classes and structs in Darts namespace
 
@@ -44,9 +43,6 @@ namespace Darts {
             int target;
             dartThrow throwType;
         } Throw;
-
-       // maps to store the throw for each score
-        std::unordered_map<int, std::vector<Throw>> scoreToThrow;
 
         // function to calculate simple best throw
         Throw calculateSimpleThrow();
