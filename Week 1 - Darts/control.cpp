@@ -94,44 +94,27 @@ void Darts::Control::createMatchThreads()
 
 void Darts::Control::simulateMatches()
 {
-    while (matchCount <= rules.repetitions)
+    while (true)
     {
         // lock the match count mutex
         mutexMatchCount.lock();
+
+        // checks if match count is greater or equal to number of repetitions
+        if (matchCount >= rules.repetitions)
+        {
+            // if no more repetitions unlock then break
+            mutexMatchCount.unlock();
+            break;
+        }
+
         ++matchCount;
-        // unlock the match count mutex
+        // unlock the match count mutex after reading and incrementing
         mutexMatchCount.unlock();
 
         DartGame game(players, rules);
         game.simulateMatch();
 
         // call some function here to get the data from game and store it
-    }
-}
-
-void Darts::Control::inputRepetitions()
-{
-    // while loop to check if the input is a valid number
-    while (true)
-    {
-        std::cout << "How many matches should be played? ";
-        std::string matchesToPlayString;
-        std::getline(std::cin >> std::ws, matchesToPlayString);
-
-        try
-        {
-            rules.repetitions = std::stoi(matchesToPlayString);
-            if (rules.repetitions > 0)
-            {
-                break;
-            }
-            std::cout << "\n [*] Invalid number of matches. Please try again.\n";
-        }
-        catch (std::invalid_argument)
-        {
-            std::cout << "\n [*] Invalid number of matches. Please try again.\n";
-        }
-
     }
 }
 

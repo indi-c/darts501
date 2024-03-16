@@ -21,6 +21,9 @@ namespace Darts {
         ::std::string name{}; // Player's name
         double totalAccuracy{}; // double to store the average accuracy of throws
 
+        
+        
+
         int enemyScore{}; // to be set by dartGame
 
         // enum class for throw calculation complexity to be used
@@ -44,30 +47,17 @@ namespace Darts {
             dartThrow throwType;
         } Throw;
 
+        // chosen throw
+        Throw chosenThrow{ 0, &Darts::Player::throwSingle };
+
         // function to calculate simple best throw
         Throw calculateSimpleThrow();
 
         // function to calculate best throw
         Throw calculateOptimalThrow();
 
-        // Function to decide which throw to make
-        // Returns a struct containing the throw type and target
-        Throw decideThrow(); 
-
-        // throw at the bull, 25 for outer, 50 for inner
-        void throwBull(int d);
-
-        // throw for a treble
-        void throwTreble(int d);
-
-        // throw for a double
-        void throwDouble(int d);
-
-        // throw for a single
-        void throwSingle(int d);
-
         // board representation thanks to code given for task
-        const int board[2][21] = { {0,20,15,17,18,12,13,19,16,14,6,8,9,4,11,10,7,2,1,3,5},
+        int board[2][21] = { {0,20,15,17,18,12,13,19,16,14,6,8,9,4,11,10,7,2,1,3,5},
                {0,18,17,19,13,20,10,16,11,12,15,14,5,6,9,2,8,3,4,7,1} };
 
         // Function to generate a random number between min and max using the Mersenne Twister engine
@@ -94,15 +84,37 @@ namespace Darts {
         double getTotalAccuracy();
         ::std::string getName();
 
+        // get chosen throw
+        Throw getChosenThrow();
+
         // increment score, gamesWon, setsWon;
         void incrementGamesWon();
         void incrementSetsWon();
 
+        // throw at the bull, 25 for outer, 50 for inner
+        void throwBull(int d);
+
+        // throw for a treble
+        void throwTreble(int d);
+
+        // throw for a double
+        void throwDouble(int d);
+
+        // throw for a single
+        void throwSingle(int d);
+
         // Resets player's score and thrown count for a new game
         void newGame(int score);
 
-        // throws a dart by deciding strategy and applying it
+        // throws the chosenThrow
         void throwDart();
+
+        // Function to decide which throw to make
+        // sets chosenThrow to the best throw
+        void decideThrow();
+
+        // apply the throw score to the player's score
+        void applyThrowScore();
     };
 
     // struct to store the two players and who is to play
@@ -111,7 +123,7 @@ namespace Darts {
     public:
         Player playerOne;
         Player playerTwo;
-        std::array<Player, 2> players{ playerOne, playerTwo };
+        std::array<Player, 2> arr_players{ playerOne, playerTwo };
         enum class ToPlay
         {
             PLAYER_ONE,

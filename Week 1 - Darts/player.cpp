@@ -31,6 +31,7 @@ double Darts::Player::getRoundAverage() { return static_cast<double>(score) / th
 double Darts::Player::getAccuracy() { return accuracy; }
 double Darts::Player::getTotalAccuracy() { return totalAccuracy; }
 std::string Darts::Player::getName() { return name; }
+Darts::Player::Throw Darts::Player::getChosenThrow() { return chosenThrow; }
 
 // increment member functions
 void Darts::Player::incrementGamesWon() { gamesWon++; }
@@ -48,63 +49,63 @@ Darts::Player::Throw Darts::Player::calculateOptimalThrow()
     // prioritize finishing on double 20 or double 16 if possible
     if (score == 40 || score == 32)
     {
-        return Throw{ score / 2, throwDouble };
+        return Throw{ score / 2, &Darts::Player::throwDouble };
     }
     // inner bull finish
     else if (score == 50)
     {
-        return Throw{ 50, throwBull };
+        return Throw{ 50, &Darts::Player::throwBull };
     }
     // even scores below 40 get double finish
     else if ((score < 40 && (score % 2) == 0))
     {
-        return Throw{ score / 2, throwDouble };
+        return Throw{ score / 2, &Darts::Player::throwDouble };
     }
     // if score is 74 go for treble 14 to leave 32
     else if (score == 74)
     {
-        return Throw{ 14, throwTreble };
+        return Throw{ 14, &Darts::Player::throwTreble };
     }
     // else if score is 61 go for treble 7 to leave 40
     else if (score == 61)
     {
-        return Throw{ 7, throwTreble };
+        return Throw{ 7, &Darts::Player::throwTreble };
     }
     // more aggressive plays if the opponent can finish
     else if (score > 61 && enemyScore <= 170)
     {
         // rudimentary, aims for treble 20 to get into double range asap
-        return Throw{ 20, throwTreble };
+        return Throw{ 20, &Darts::Player::throwTreble };
     }
     // scores above 61 and less than 170
     else if (score > 61 && score <= 170)
     {
         if (score % 2 == 0 && score <= 170)
         {
-            return Throw{ 20, throwTreble };
+            return Throw{ 20, &Darts::Player::throwTreble };
         }
         else if (score < 170)
         {
             // treble 19, guaranteeing an even score trying to get into a lower range
-            return Throw{ 19, throwTreble };
+            return Throw{ 19, &Darts::Player::throwTreble };
         }
     }
     // scores less than 61 but above 40
     else if (score < 61 && score > 40)
     {
         // aim for a score that leaves you with 40
-        return Throw{ score - 40, throwSingle };
+        return Throw{ score - 40, &Darts::Player::throwSingle };
     }
     // handling odd scores below 40 by reducing them to an even score for a double finish
     else if (score < 40 && (score % 2) != 0)
     {
         // single 1 to get to an even score for a double finish
-        return Throw{ 1, throwSingle };
+        return Throw{ 1, &Darts::Player::throwSingle };
     }
     // default to treble 20
     else
     {
-        return Throw{ 20, throwTreble };
+        return Throw{ 20, &Darts::Player::throwTreble };
     }
 }
 
@@ -114,61 +115,59 @@ Darts::Player::Throw Darts::Player::calculateSimpleThrow()
     // if game is able to be finished with a double, aim to finish game
     if ((score <= 40) && ((score % 2) == 0))
     {
-        return Throw{ score / 2, throwDouble };
+        return Throw{ score / 2, &Darts::Player::throwDouble };
     }
     // if odd and below 40 throw a single 1
     else if ((score <= 40) && ((score % 2) != 0))
     {
-        return Throw{ 1, throwSingle };
+        return Throw{ 1, &Darts::Player::throwSingle };
     }
     // if game is able to be finished with inner bull, aim to finish game
     else if (score == 50)
     {
-        return Throw{ 50, throwBull };
+        return Throw{ 50, &Darts::Player::throwBull };
     }
     // aims for single to get into double range due to safety
     // score must be above 41
     else if ((score <= 60) && (score > 41))
     {
-        return Throw{ score - 40, throwSingle };
+        return Throw{ score - 40, &Darts::Player::throwSingle };
     }
     // else if score is 41 throw for single 19
     // misses score 7 or 3 ensuring it'll always be even
     else if (score == 41)
     {
-        return Throw{ 19, throwSingle };
+        return Throw{ 19, &Darts::Player::throwSingle };
     }
     // else if score is 61 throw for single 19
     // misses score 7 or 3 ensuring it'll always be even
     else if (score == 61)
     {
-        return Throw{ 19, throwSingle };
+        return Throw{ 19, &Darts::Player::throwSingle };
     }
     // throw a triple 20 to get into range of the above if above 61
     else if (score > 61)
     {
-        return Throw{ 20, throwTreble };
+        return Throw{ 20, &Darts::Player::throwTreble };
     }
 }
 
 // throws a dart by deciding throw and calling the appropriate function
 void Darts::Player::throwDart()
 {
-	// decide throw
-	Throw t = decideThrow();
-
-    (this->*(t.throwType))(t.target);
+    // throw dart
+    (this->*(chosenThrow.throwType))(chosenThrow.target);
 }
 
 // analyse game state and decide throw
-Darts::Player::Throw Darts::Player::decideThrow()
+void Darts::Player::decideThrow()
 {
     switch (difficulty)
     {
         case ThrowComplexity::SIMPLE: 
-            return calculateSimpleThrow();
+            chosenThrow = calculateSimpleThrow();
         case ThrowComplexity::COMPLEX:
-            return calculateOptimalThrow();
+            chosenThrow = calculateOptimalThrow();
     }
 }
 
@@ -303,4 +302,11 @@ void Darts::Player::throwSingle(int d) {
     else {
         throwScore = 2 * d;
     }
+}
+
+// applies the throw score to the player's score
+void Darts::Player::applyThrowScore()
+{
+	score -= throwScore;
+	thrown++;
 }
