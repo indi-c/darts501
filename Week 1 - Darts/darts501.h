@@ -3,6 +3,7 @@
 #include <mutex>
 #include <array>
 #include <vector>
+#include <unordered_map>
 
 // interface for darts501 which stores all classes and structs in Darts namespace
 
@@ -21,6 +22,17 @@ namespace Darts {
         ::std::string name{}; // Player's name
         double totalAccuracy{}; // double to store the average accuracy of throws
 
+        int enemyScore{}; // to be set by dartGame
+
+        // enum class for throw calculation complexity to be used
+        enum class ThrowComplexity
+        {
+			SIMPLE,
+			COMPLEX
+		};
+
+        ThrowComplexity difficulty{};
+
         // Function pointer type for dart throws
         // used in struct Throw to store the throw type
         typedef void (Darts::Player::*dartThrow)(int);
@@ -31,22 +43,16 @@ namespace Darts {
         {
             int target;
             dartThrow throwType;
-            int idealScore; // what score should this throw be at
         } Throw;
 
-        // vectors to score a bruteforce of scores and optimal throws
-        // this relies on the practical assumption each player
-        // is confident in their accuracy and will always aim for the optimum throw
-        // rather than worrying about safety or the other player
-        std::vector<Throw> throwsToOneSeventy;
-        std::vector<Throw> threeThrowWins;
-        std::vector<Throw> twoThrowWins;
-        std::vector<Throw> oneThrowWins;
+       // maps to store the throw for each score
+        std::unordered_map<int, std::vector<Throw>> scoreToThrow;
 
-        // function to calculate throws
-        // run on construction
-        // placing my trust in the exponential allocation of std::vector
-        void calculateThrows();
+        // function to calculate simple best throw
+        Throw calculateSimpleThrow();
+
+        // function to calculate best throw
+        Throw calculateOptimalThrow();
 
         // Function to decide which throw to make
         // Returns a struct containing the throw type and target
