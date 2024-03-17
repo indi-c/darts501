@@ -91,6 +91,9 @@ namespace Darts {
         void incrementGamesWon();
         void incrementSetsWon();
 
+        // new set
+        void newSet();
+
         // throw at the bull, 25 for outer, 50 for inner
         void throwBull(int d);
 
@@ -104,7 +107,7 @@ namespace Darts {
         void throwSingle(int d);
 
         // Resets player's score and thrown count for a new game
-        void newGame(int score);
+        void newGame(int s);
 
         // throws the chosenThrow
         void throwDart();
@@ -123,7 +126,7 @@ namespace Darts {
     public:
         Player playerOne;
         Player playerTwo;
-        std::array<Player, 2> arr_players{ playerOne, playerTwo };
+        std::array<Player*, 2> arr_players{ &playerOne, &playerTwo };
         enum class ToPlay
         {
             PLAYER_ONE,
@@ -192,6 +195,8 @@ namespace Darts {
         GamePlayers players;
         Ruleset rules;
 
+        Player* activePlayer;
+
         enum class ThrowVerification
 		{
 			INVALID,
@@ -241,7 +246,7 @@ namespace Darts {
         // mutex for thread safety used in simulateMatches
         ::std::mutex mutexMatchCount;
 
-        int matchCount{ 1 }; // Count of matches played
+        int matchCount{ 0 }; // Count of matches played
 
     public:
         // Constructor to initiate the game setup process

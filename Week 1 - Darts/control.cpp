@@ -2,6 +2,8 @@
 #include <iostream>
 #include <thread>
 #include <vector>
+#include <memory>
+#include <mutex>
 
 Darts::Control::Control()
 {
@@ -96,23 +98,21 @@ void Darts::Control::simulateMatches()
 {
     while (true)
     {
-        // lock the match count mutex
-        mutexMatchCount.lock();
-
-        // checks if match count is greater or equal to number of repetitions
-        if (matchCount >= rules.repetitions)
+        // scope for lock guard to utilize RAII
         {
-            // if no more repetitions unlock then break
-            mutexMatchCount.unlock();
-            break;
+            std::lock_guard<std::mutex> lock(mutexMatchCount);
+            // checks if match count is greater or equal to number of repetitions
+            if (matchCount >= rules.repetitions)
+            {
+                return;
+            }
+
+            ++matchCount;
+            // unlock the match count mutex after reading and incrementing
         }
 
-        ++matchCount;
-        // unlock the match count mutex after reading and incrementing
-        mutexMatchCount.unlock();
-
-        DartGame game(players, rules);
-        game.simulateMatch();
+        std::unique_ptr<DartGame> game = std::make_unique<DartGame>(players, rules);
+        game->simulateMatch();
 
         // call some function here to get the data from game and store it
     }

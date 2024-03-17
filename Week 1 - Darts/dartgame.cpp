@@ -3,6 +3,8 @@
 
 Darts::DartGame::DartGame(GamePlayers p, Ruleset r) : players{ p }, rules{ r }
 {
+	players.arr_players[0] = &players.playerOne;
+	players.arr_players[1] = &players.playerTwo;
 }
 
 void Darts::DartGame::simulateMatch()
@@ -21,6 +23,18 @@ void Darts::DartGame::simulateSet()
 	{
 		simulateGame();
 	}
+
+	// get each players sets and determine the winner
+	if (players.playerOne.getGamesWon() == 3)
+	{
+		players.playerOne.incrementSetsWon();
+	}
+	else if (players.playerTwo.getGamesWon() == 3)
+	{
+		players.playerTwo.incrementSetsWon();
+	}
+	players.playerOne.newSet();
+	players.playerTwo.newSet();
 }
 
 void Darts::DartGame::simulateGame()
@@ -28,7 +42,7 @@ void Darts::DartGame::simulateGame()
 	// reset player scores and thrown count
 	for (auto p : players.arr_players)
 	{
-		p.newGame(rules.startPoints);
+		p->newGame(rules.startPoints);
 	}
 
 	while (players.playerOne.getScore() > 0 && players.playerTwo.getScore() > 0)
@@ -39,7 +53,7 @@ void Darts::DartGame::simulateGame()
 
 void Darts::DartGame::simulateRound()
 {
-	static Player *activePlayer{ &players.arr_players[(int)players.ToPlay] };
+	activePlayer = { players.arr_players[(int)(players.ToPlay)] };
 	
 	// throw and verify three scores
 	for (int i{ 0 }; i < 3; ++i)
@@ -51,6 +65,7 @@ void Darts::DartGame::simulateRound()
 
 		if (verified == ThrowVerification::WIN)
 		{
+			activePlayer->applyThrowScore();
 			// player won the game
 			activePlayer->incrementGamesWon();
 			return;
@@ -68,7 +83,7 @@ void Darts::DartGame::simulateRound()
 
 	// switch active player
 	players.ToPlay = (players.ToPlay == GamePlayers::ToPlay::PLAYER_ONE) ? GamePlayers::ToPlay::PLAYER_TWO : GamePlayers::ToPlay::PLAYER_ONE;
-	activePlayer = { &players.arr_players[(int)players.ToPlay] };
+	activePlayer = { players.arr_players[(int)players.ToPlay] };
 }
 
 void Darts::DartGame::displayAccuracies()
@@ -83,7 +98,23 @@ Darts::DartGame::ThrowVerification Darts::DartGame::verifyScore(Player* p)
 
 	if (p->getChosenThrow().throwType == &Player::throwDouble)
 	{
-		if (p->getScore() == 0)
+		if (p->getScore() - p->getThrowScore() == 0)
+		{
+			return ThrowVerification::WIN;
+		}
+		else if (p->getScore() - p->getThrowScore() < 2)
+		{
+			return ThrowVerification::INVALID;
+		}
+		else
+		{
+			return ThrowVerification::VALID;
+		}
+	}
+
+	if (p->getChosenThrow().throwType == &Player::throwBull)
+	{
+		if (p->getScore() - p->getThrowScore() == 0)
 		{
 			return ThrowVerification::WIN;
 		}
@@ -105,4 +136,5 @@ Darts::DartGame::ThrowVerification Darts::DartGame::verifyScore(Player* p)
 	{
 		return ThrowVerification::VALID;
 	}
+
 }

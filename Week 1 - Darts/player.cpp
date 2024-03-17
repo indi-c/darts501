@@ -2,6 +2,7 @@
 #include <random>
 #include <cmath>
 #include <array>
+#include <iostream>
 
 Darts::Player::Player(double a, std::string n) : accuracy{ a }, name{ n }, thrown{ 0 }
 {
@@ -37,9 +38,15 @@ Darts::Player::Throw Darts::Player::getChosenThrow() { return chosenThrow; }
 void Darts::Player::incrementGamesWon() { gamesWon++; }
 void Darts::Player::incrementSetsWon() { setsWon++; }
 
-void Darts::Player::newGame(int score)
+// new set member function
+void Darts::Player::newSet()
 {
-    this->score = score;
+	gamesWon = 0;
+}
+
+void Darts::Player::newGame(int s)
+{
+    score = s;
     thrown = 0;
 }
 
@@ -150,6 +157,13 @@ Darts::Player::Throw Darts::Player::calculateSimpleThrow()
     {
         return Throw{ 20, &Darts::Player::throwTreble };
     }
+    else
+    {
+        // output as this should never be reached
+        // display score for debugging
+        std::cout << "Score: " << score << '\n';
+        return Throw{ 20, &Darts::Player::throwTreble };
+    }
 }
 
 // throws a dart by deciding throw and calling the appropriate function
@@ -166,8 +180,10 @@ void Darts::Player::decideThrow()
     {
         case ThrowComplexity::SIMPLE: 
             chosenThrow = calculateSimpleThrow();
+            break;
         case ThrowComplexity::COMPLEX:
             chosenThrow = calculateOptimalThrow();
+            break;
     }
 }
 
